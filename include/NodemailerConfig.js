@@ -11,18 +11,21 @@ var transporter = nodemailer.createTransport({
 	},
 	secure: false,
 });
-exports.sendMail = (otp, email) => {
-	var mailOptions = {
-		from: 'sritelcommunications@gmail.com',
-		to: email,
-		subject: 'Verify your email',
-		text: otp,
-	};
-	transporter.sendMail(mailOptions, function (error, info) {
-		if (error) {
-			return error;
-		} else {
-			return 'Email sent: ' + info.response;
-		}
+async function SendMail(otp, email) {
+	return new Promise((resolve, reject) => {
+		var mailOptions = {
+			from: 'sritelcommunications@gmail.com',
+			to: email,
+			subject: 'Verify your email',
+			text: otp,
+		};
+		transporter.sendMail(mailOptions, function (error, info) {
+			if (error) {
+				resolve('error');
+			} else {
+				resolve('emailsent');
+			}
+		});
 	});
-};
+}
+module.exports = {SendMail};

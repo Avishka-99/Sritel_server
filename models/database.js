@@ -41,9 +41,6 @@ async function INSERT(table, columns, values) {
 const UPDATE = function (data) {
 	console.log(data);
 };
-// const SELECT = function (data) {
-// 	console.log(data);
-// };
 const DELETE = function (data) {
 	console.log(data);
 };
@@ -69,36 +66,40 @@ async function SELECT(table) {
 		});
 	});
 }
-async function QUERY(query) {
-	console.log(query);
+async function SELECT_WHERE(table, column, value) {
 	return new Promise((resolve, reject) => {
 		pool.getConnection((err, connection) => {
 			if (err) {
 				reject(err);
 				return;
 			}
-
-			// Execute the query using the connection
-			connection.query(query, (err, result, fields) => {
-				connection.release(); // Release the connection back to the pool
-
+			connection.query('SELECT * FROM ' + table + ' WHERE ' + column + "='" + value + "'", (err, result, fields) => {
+				connection.release();
 				if (err) {
 					reject(err);
 					return;
 				}
-				//console.log(result);
 				resolve(JSON.parse(JSON.stringify(result)));
 			});
 		});
 	});
 }
-// const QUERY = function (query) {
-// 	pool.query(query, function (err, result, fields) {
-// 		if (err) throw err;
-// 		console.log(JSON.parse(JSON.stringify(result)));
-// 		return JSON.parse(JSON.stringify(result));
-// 		//console.log(JSON.parse(JSON.stringify(result)));
-// 	});
-// };
-module.exports = {INSERT, UPDATE, SELECT, DELETE, QUERY};
-// module.exports = pool;
+async function QUERY(query) {
+	return new Promise((resolve, reject) => {
+		pool.getConnection((err, connection) => {
+			if (err) {
+				reject(err);
+				return;
+			}
+			connection.query(query, (err, result, fields) => {
+				connection.release();
+				if (err) {
+					resolve('error');
+				} else {
+					resolve(JSON.parse(JSON.stringify(result)));
+				}
+			});
+		});
+	});
+}
+module.exports = {INSERT, UPDATE, SELECT, DELETE, QUERY, SELECT_WHERE};
