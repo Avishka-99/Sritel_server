@@ -55,7 +55,9 @@ router.post('/registeruser', (req, res) => {
 				if (result.length == 0) {
 					const otp = generateOtp(6);
 					QUERY("INSERT INTO user(user_name,password,state) VALUES('" + email + "','" + hash + "','" + otp + "')").then((result_1) => {
-						res.send({type: 'success', message: 'Account created successfully'});
+						SendMail(otp, email).then((response) => {
+							res.send({type: 'success', message: 'Account created successfully'});
+						});
 					});
 				} else {
 					res.send({type: 'error', message: 'Account already exists!'});
