@@ -5,11 +5,11 @@ const app = express();
 const path = require('path');
 const {json} = require('sequelize');
 const {INSERT, UPDATE, SELECT, DELETE} = require('./models/database');
-const customerRoutes = require('./api/customer');
+const userRoutes = require('./api/user');
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use('/api', customerRoutes);
+app.use('/api', userRoutes);
 app.listen(5001, () => {
 	console.log('Server listening on port 5001');
 	// (async () => {
