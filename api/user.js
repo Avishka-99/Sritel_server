@@ -14,13 +14,13 @@ router.post('/signinuser', (req, res) => {
 	console.log(email);
 	(async () => {
 		try {
-			await SELECT_WHERE('user', 'user_name', email).then((response) => {
+			await SELECT_WHERE('user', 'email', email).then((response) => {
 				if (response.length > 0) {
 					bcrypt.compare(password, response[0].password, async (err, result_2) => {
 						if (result_2) {
 							if (response[0].state != 'verified') {
 								const otp = generateOtp(6);
-								QUERY("UPDATE user SET state='" + otp + "' WHERE user_name='" + email + "'").then((result_3) => {
+								QUERY("UPDATE user SET state='" + otp + "' WHERE email='" + email + "'").then((result_3) => {
 									SendMail(otp, email).then((response) => {
 										res.send({type: 'warning', message: 'Need to verify email first'});
 									});
@@ -50,11 +50,11 @@ router.post('/registeruser', (req, res) => {
 		if (err) {
 			res.send({type: 'error', message: 'An error occured. Try again later'});
 		} else {
-			QUERY("SELECT * FROM user WHERE user_name='" + email + "'").then((result) => {
+			QUERY("SELECT * FROM user WHERE email='" + email + "'").then((result) => {
 				console.log(result);
 				if (result.length == 0) {
 					const otp = generateOtp(6);
-					QUERY("INSERT INTO user(user_name,password,state) VALUES('" + email + "','" + hash + "','" + otp + "')").then((result_1) => {
+					QUERY("INSERT INTO user(email,password,state) VALUES('" + email + "','" + hash + "','" + otp + "')").then((result_1) => {
 						SendMail(otp, email).then((response) => {
 							res.send({type: 'success', message: 'Account created successfully'});
 						});

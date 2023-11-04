@@ -4,9 +4,11 @@ const {Server} = require('socket.io');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const userRoutes = require('./api/user')
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use('/api', userRoutes);
 const server = http.createServer(app);
 const io = new Server(server, {
 	cors: {
