@@ -66,6 +66,47 @@ router.post('/registeruser', (req, res) => {
 		}
 	});
 });
+
+router.post('/addcustomer', (req, res) => {
+	const email = req.body.email;
+	const name = req.body.name;
+	const contact_no = req.body.contact_no;
+	const password = req.body.password;
+
+	bcrypt.hash(password, 10, (err, hash) => {
+		if (err) {
+			res.send({type: 'error', message: 'An error occured. Try again later'});
+		} else {
+			QUERY("SELECT * FROM user WHERE email='" + email + "'").then((result) => {
+				console.log(result);
+				if (result.length == 0) {
+					QUERY(
+                        "INSERT INTO user(name,contact_no,email,password,state) VALUES('" +
+                            name +
+                            "','" +
+                            contact_no +
+                            "','" +
+                            email +
+                            "','" +
+                            hash +
+                            "','" +
+                            "verified" +
+                            "')"
+                    ).then((result_1) => {
+                        SendMail(0, password, email).then((response) => {
+                            res.send({
+                                type: "success",
+                                message: "Account created successfully",
+                            });
+                        });
+                    });
+				} else {
+					res.send({type: 'error', message: 'Account already exists!'});
+				}
+			});
+		}
+	});
+});
 router.post('/verifyuser', (req, res) => {
 	const email = req.body.email;
 	const otp = req.body.otp;
@@ -81,6 +122,11 @@ router.post('/verifyuser', (req, res) => {
 		} else {
 			res.send({type: 'error', message: 'An error occured'});
 		}
+	});
+});
+router.get('/customers', (req, res) => {
+	QUERY("SELECT * FROM user WHERE type = 'Customer';").then((response) => {
+		res.send(response);
 	});
 });
 module.exports = router;

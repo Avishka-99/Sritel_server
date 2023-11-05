@@ -11,14 +11,24 @@ var transporter = nodemailer.createTransport({
 	},
 	secure: false,
 });
-async function SendMail(otp, email) {
+async function SendMail(otp, password, email) {
 	return new Promise((resolve, reject) => {
-		var mailOptions = {
-			from: 'sritelcommunications@gmail.com',
-			to: email,
-			subject: 'Verify your email',
-			text: otp,
-		};
+		if (otp) {
+			var mailOptions = {
+				from: "sritelcommunications@gmail.com",
+				to: email,
+				subject: "Verify your email",
+				text: `Your OTP is ${otp} Account created successfully Your Password is "${password}"`,
+			};
+		}
+		else {
+			var mailOptions = {
+                from: "sritelcommunications@gmail.com",
+                to: email,
+                subject: "Verify your email",
+                text: `Account created successfully Your Password is "${password}"`,
+            };
+		}
 		transporter.sendMail(mailOptions, function (error, info) {
 			if (error) {
 				resolve('error');
