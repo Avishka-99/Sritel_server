@@ -92,8 +92,10 @@ async function QUERY(query) {
 				return;
 			}
 			connection.query(query, (err, result, fields) => {
+				
 				connection.release();
 				if (err) {
+					console.log(err)
 					resolve('error');
 				} else {
 					resolve(JSON.parse(JSON.stringify(result)));
