@@ -16,9 +16,9 @@ router.post('/addpackage',(req,res)=>{
 		});
 
 })
-router.post('/getalpackages',(req,res)=>{
-    QUERY("SELECT * FROM package").then((response)=>{
-        res.send(response)
-    })
-})
+router.post('/getallpackages', (req, res) => {
+	QUERY('SELECT * FROM package').then((response) => {
+		res.send(response);
+	});
+});
 module.exports = router;
