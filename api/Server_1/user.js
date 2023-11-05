@@ -83,4 +83,11 @@ router.post('/verifyuser', (req, res) => {
 		}
 	});
 });
+router.get('/getallstaff', (req, res) => {
+	QUERY('SELECT * FROM `user` WHERE type="Staff"').then((response) => {
+		res.send(response);
+	});
+	
+});
+
 module.exports = router;
