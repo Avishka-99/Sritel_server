@@ -4,7 +4,7 @@ const {Server} = require('socket.io');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const userRoutes = require('./api/user')
+const userRoutes = require('./api/Server_1/user');
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
