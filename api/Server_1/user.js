@@ -55,7 +55,7 @@ router.post('/registeruser', (req, res) => {
 				if (result.length == 0) {
 					const otp = generateOtp(6);
 					QUERY("INSERT INTO user(email,password,state) VALUES('" + email + "','" + hash + "','" + otp + "')").then((result_1) => {
-						SendMail(otp, email).then((response) => {
+						SendMail(otp,password,email).then((response) => {
 							res.send({type: 'success', message: 'Account created successfully'});
 						});
 					});
@@ -89,5 +89,52 @@ router.get('/getallstaff', (req, res) => {
 	});
 	
 });
+
+router.post('/addstaff', async (req,res)=>{
+    const name =req.body.name
+	const email =req.body.email
+	const type = req.body.type
+	const contact_no = req.body.contactNo
+    const password = "Sritel@123"
+
+	bcrypt.hash(password, 10, (err, hash) => {
+		if (err) {
+			res.send({type: 'error', message: 'An error occured. Try again later'});
+		} else {
+			QUERY("SELECT * FROM user WHERE email='" + email + "'").then((result) => {
+				console.log(result);
+				if (result.length == 0) {
+					QUERY(
+                        "INSERT INTO user(name,contact_no,email,password,state,type) VALUES('" +
+                            name +
+                            "','" +
+                            contact_no +
+                            "','" +
+                            email +
+                            "','" +
+                            hash +
+                            "','" +
+                            "verified" +
+                            "','" +
+                            type +
+                            "')"
+                    ).then((result_1) => {
+                        SendMail(0, password, email).then((response) => {
+							res.send({
+                                type: "success",
+                                message: "Account created successfully",
+                            });
+                        });
+                    });
+				} else {
+					res.send({type: 'error', message: 'Account already exists!'});
+				}
+			});
+		}
+	});
+
+
+
+})
 
 module.exports = router;
