@@ -7,7 +7,7 @@ const pool = mysql.createPool({
 	host: 'localhost',
 	user: 'root',
 	password: '',
-	database: 'sritel',
+	database: 'sritel_bill',
 });
 async function INSERT(table, columns, values) {
 	return new Promise((resolve, reject) => {
