@@ -26,7 +26,7 @@ router.post('/signinuser', (req, res) => {
 									});
 								});
 							} else {
-								res.send({type: 'success', user: response[0].type});
+								res.send({type: 'success', user: response[0].type, id: response[0].user_id});
 							}
 						} else {
 							res.send({type: 'error', message: 'Incorrect password'});
@@ -124,9 +124,19 @@ router.post('/verifyuser', (req, res) => {
 		}
 	});
 });
+
 router.get('/customers', (req, res) => {
 	QUERY("SELECT * FROM user WHERE type = 'Customer';").then((response) => {
 		res.send(response);
 	});
 });
+
+router.get('/getallstaff', (req, res) => {
+	QUERY('SELECT * FROM `user` WHERE type="Staff"').then((response) => {
+		res.send(response);
+	});
+	
+});
+
+
 module.exports = router;
